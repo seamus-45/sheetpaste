@@ -1,0 +1,13 @@
+location / {
+        index index.html;
+}
+
+location /api/ {
+        index index.php;
+        try_files $uri $uri/ /api/index.php;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_intercept_errors on;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include /etc/nginx/fastcgi_params;
+}
