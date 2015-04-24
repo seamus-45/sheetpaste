@@ -1,0 +1,36 @@
+{
+  "name": "sheetpaste",
+  "version": "0.0.0",
+  "homepage": "https://github.com/seamus-45",
+  "authors": [
+    "Федотов Сергей <sr.fido@gmail.com>"
+  ],
+  "description": "Test Polymer project",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.5",
+    "font-roboto": "Polymer/font-roboto#~0.5.5",
+    "core-toolbar": "Polymer/core-toolbar#~0.5.5",
+    "core-header-panel": "Polymer/core-header-panel#~0.5.5",
+    "core-scaffold": "Polymer/core-scaffold#~0.5.5",
+    "highlightjs-element": "Polymer/highlightjs-element#~0.5.5",
+    "core-ajax": "Polymer/core-ajax#~0.5.5",
+    "date.format": "jacwright/date.format",
+    "app-router": "~2.6.0",
+    "core-animated-pages": "Polymer/core-animated-pages#~0.5.5",
+    "paper-fab": "Polymer/paper-fab#~0.5.5",
+    "webcomponent-qr-code": "~0.1.7",
+    "paper-shadow": "Polymer/paper-shadow#~0.5.5",
+    "paper-input": "Polymer/paper-input#~0.5.5",
+    "paper-radio-group": "Polymer/paper-radio-group#~0.5.5"
+  }
+}

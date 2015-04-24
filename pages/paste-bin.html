@@ -1,0 +1,29 @@
+<link rel="import" href="/bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/core-icon/core-icon.html">
+<link rel="import" href="paste-core.html">
+
+<polymer-element name="paste-bin" extends="paste-core" noscript>
+  <template>
+    <style>
+      h4 {
+        margin: 1rem;
+        color: #424242;
+      }
+      .paste-header {
+        padding: 0.5rem;
+      }
+      paper-fab {
+        background-color: #e65100;
+        margin: 0 0.5rem;
+      }
+    </style>
+      <paper-shadow z="1">
+        <div class="paste-header" layout horizontal center>
+          <h4 flex>Создано: {{timestamp | formatDate}}</h4>
+          <paper-fab icon='content-copy' mini on-tap="{{copyPaste}}"></paper-fab>
+        </div>
+        <shadow></shadow>
+      </paper-shadow>
+  </template>
+</polymer-element>

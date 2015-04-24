@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+
+  <title>Polybin!</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+
+  <link rel="import" href="/bower_components/app-router/app-router.html">
+  <link rel="import" href="/bower_components/font-roboto/roboto.html">
+  
+  <style>
+    html,body {
+      height: 100%;
+      margin: 0;
+      background-color: #E5E5E5;
+      font-family: 'RobotoDraft', sans-serif;
+    }
+  </style>
+  
+</head>
+
+<body unresolved>
+  <app-router core-animated-pages transitions='cross-fade'>
+    <app-route path="/" import="/pages/home-page.html"></app-route> 
+    <app-route path="/paste/:pasteid" import="/pages/paste-page.html"></app-route>
+  </app-router>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<link rel="import" href="/bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="paste-core.html">
+
+<polymer-element name="paste-card" extends="paste-core" attributes="url" noscript>
+  <template>
+    <style>
+      :host {
+        margin-bottom: 10px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      a {
+        text-decoration: none;
+      }
+      .card-header h4 {
+        margin: 0;
+        padding: 2px;
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: white;
+        background-color: #E65100;
+        width: 100%;
+      }
+      :host::shadow #content { 
+        max-height: 11.6rem;
+      }
+    </style>
+    <paper-shadow z="1">
+      <a href='{{url}}'>
+        <shadow></shadow>
+        <div class="card-header" layout horizontal center>
+          <h4>Создано: {{timestamp | formatDate}}</h4>
+        </div>
+      </a>
+    </paper-shadow>
+  </template>
+</polymer-element>

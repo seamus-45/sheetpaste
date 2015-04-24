@@ -1,0 +1,51 @@
+<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="/bower_components/core-icon/core-icon.html">
+
+<polymer-element name="site-layout" noscript>
+  <template>
+    <style>
+      a {
+        text-decoration: none;
+        color: white;
+      }
+      .container {
+        width: 95%;
+        margin: 30px auto;
+      }
+      #navHeader {
+        color: white;
+        background-color: #E65100;
+      }
+      [drawer] {
+        box-shadow: -1px 0 1px rgba(0, 0, 0, 0.1);
+      }
+      core-scaffold /deep/ #headerPanel > core-toolbar {
+        background-color: #424242;
+      }
+      [tool] > span {
+        font-style: italic;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    </style>
+    <core-scaffold rightDrawer drawerWidth='400px'>
+      <core-header-panel navigation flex mode="seamed" drawer>
+          <core-toolbar id="navHeader">
+            <core-icon icon="history"></core-icon><span flex>История</span>
+          </core-toolbar>
+          <content select="qr-code"></content>
+          <content select="paste-list"></content>
+      </core-header-panel>
+
+      <div tool layout horizontal flex center>
+        <span><a href='/'>SheetPaste!<core-icon icon="thumb-up"></core-icon></a></span>
+      </div>
+
+      <div class="container" layout vertical center>
+        <content></content>
+      </div>
+    </core-scaffold>
+  </template>
+</polymer-element>
