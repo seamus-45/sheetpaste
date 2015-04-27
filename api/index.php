@@ -5,6 +5,7 @@ date_default_timezone_set('UTC');
 
 $app = new \Slim\Slim();
 
+$app->get('/', 'api_hint');
 $app->get('/post/:id', 'get_post');
 $app->get('/posts/:until', 'get_posts');
 $app->post('/post', 'add_post');
@@ -138,3 +139,54 @@ function get_expired() {
   $db->close();
   if($expired) { return $expired[0]; } else { return false; }
 }
+
+function api_hint() {
+  ob_start();
+?>
+<section>
+<h3>Примеры запросов:</h3>
+<ul>
+<li><strong>GET</strong> /api/post/{id} - получить содержимое 1 поста.</li>
+<h5>JSON output (object)</h5>
+<pre>{ id: pasteid,
+  content: paste data,
+  timestamp: paste date }</pre>
+или
+<pre>  {error: "paste does not exists"}</pre>
+<li><strong>GET</strong> /api/posts/{timestamp} - получить первые 10 строк у записей начиная с {timestamp} (Unix time) в порядке устаревания.</li>
+<h5>JSON output (array)</h5>
+<pre>[
+{ id: pasteid,
+  content: first 10 lines of paste,
+  timestamp: paste date },
+{ ... },
+]</pre>
+или
+<pre>  {error: "paste does not exists"}</pre>
+<li><strong>POST</strong> /api/post - Отправить пасту.</li>
+<h5>JSON input</h5>
+<pre>{ content: paste data,
+  age: '+1 month'}</pre>
+<h5>JSON output</h5>
+<pre>{ url: http://example.com/paste/id }</pre>
+<h5>x-www-form-urlencoded input</h5>
+<pre>content: paste data,
+age: '+30 days'</pre>
+<h5>plain text output</h5>
+<pre>http://example.com/paste/id</pre>
+</ul>
+</section>
+<section>
+<h3>Примеры с CURL:</h3>
+<ul>
+<li>Добавить пасту в формате JSON</li>
+<pre>curl -i -X POST -H "Content-Type: application/json" -d '{"age":"+1 day","content":"test paste"}' http://example.com/api/post</pre>
+<li>Добавить пасту в формате urlencoded</li>
+<pre>curl -i -X POST --data-urlencode content@example.txt --data-urlencode age='+1 week' http://example.com/api/post</pre>
+</section>
+<?php
+  $output = ob_get_clean();
+  echo $output;
+}
+?>
+
