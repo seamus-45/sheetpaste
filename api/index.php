@@ -183,6 +183,21 @@ age: '+30 days'</pre>
 <pre>curl -i -X POST -H "Content-Type: application/json" -d '{"age":"+1 day","content":"test paste"}' http://example.com/api/post</pre>
 <li>Добавить пасту в формате urlencoded</li>
 <pre>curl -i -X POST --data-urlencode content@example.txt --data-urlencode age='+1 week' http://example.com/api/post</pre>
+<li>Пример скрипта (cat file | script.sh)</li>
+<pre>#!/bin/bash
+TEMP=$(mktemp)
+
+tee -a >${TEMP}
+
+if [ -s ${TEMP} ]; then
+  curl -s -i -X POST --data-urlencode content@${TEMP} --data-urlencode age='+3 month' http://localhost/api/post | tail -n1
+else
+  echo "Paste is empty!"
+  exit 1
+fi
+
+rm -f ${TEMP}</pre>
+</ul>
 </section>
 <?php
   $output = ob_get_clean();
