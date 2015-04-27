@@ -24,7 +24,7 @@
       <template repeat="{{paste in pastes}}">
         <paste-card url="/#/paste/{{paste.id}}" paste="{{paste.content}}" timestamp="{{paste.timestamp}}"></paste-card>
       </template>
-      <paper-fab disabled?="{{nomore}}" on-tap="{{expandMore}}" icon="expand-more" mini></paper-fab>
+      <paper-fab disabled?="{{nomore}}" on-tap="{{expandMore}}" icon="expand-more" title="Еще" mini></paper-fab>
     </div>
   </template>
   <script>

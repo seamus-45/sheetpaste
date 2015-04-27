@@ -1,9 +1,11 @@
 <link rel="import" href="/bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/bower_components/core-icon/core-icon.html">
 <link rel="import" href="paste-core.html">
+<script src="/bower_components/zeroclipboard/dist/ZeroClipboard.min.js"></script>
 
-<polymer-element name="paste-bin" extends="paste-core" noscript>
+<polymer-element name="paste-bin" extends="paste-core">
   <template>
     <style>
       h4 {
@@ -21,9 +23,29 @@
       <paper-shadow z="1">
         <div class="paste-header" layout horizontal center>
           <h4 flex>Создано: {{timestamp | formatDate}}</h4>
-          <paper-fab icon='content-copy' mini on-tap="{{copyPaste}}"></paper-fab>
+          <paper-fab id='cb' data-clipboard-text="{{paste}}" icon='content-copy' mini></paper-fab>
         </div>
         <shadow></shadow>
       </paper-shadow>
+      <paper-toast id="toast" text='Скопировано в буфер обмена'></paper-toast>
   </template>
+  <script>
+    Polymer({
+      domReady: function() {
+        var button = this.$.cb;
+        var toast = this.$.toast;
+        var client = new ZeroClipboard( button );
+        client.on( "ready", function( readyEvent ) {
+          // alert( "ZeroClipboard SWF is ready!" );
+
+          client.on( "aftercopy", function( event ) {
+            // `this` === `client`
+            // `event.target` === the element that was clicked
+            button.focused = false;
+            toast.show();
+          } );
+        } );
+      }
+    });
+  </script>
 </polymer-element>

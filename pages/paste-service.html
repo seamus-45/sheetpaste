@@ -28,7 +28,6 @@
             this.pastes = this.pastes.concat(this.response);
           } else {
             if (typeof this.response.url !== 'undefined') {
-              console.log(this.response.url);
               document.location.href = this.response.url;
             } else {
               this.paste = this.response;
