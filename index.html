@@ -29,8 +29,8 @@
 
 <body unresolved>
   <app-router core-animated-pages transitions='cross-fade'>
-    <app-route path="/" element="home-page"></app-route> 
     <app-route path="/paste/:pasteid" element="paste-page"></app-route>
+    <app-route path="*" element="home-page"></app-route>
   </app-router>
 </body>
 
