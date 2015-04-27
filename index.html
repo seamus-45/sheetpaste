@@ -9,10 +9,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-  <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+  <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 
-  <link rel="import" href="/bower_components/app-router/app-router.html">
-  <link rel="import" href="/bower_components/font-roboto/roboto.html">
+  <link rel="import" href="bower_components/app-router/app-router.html">
+  <link rel="import" href="bower_components/font-roboto/roboto.html">
+  <link rel="import" href="pages/home-page.html">
+  <link rel="import" href="pages/paste-page.html">
   
   <style>
     html,body {
@@ -27,8 +29,8 @@
 
 <body unresolved>
   <app-router core-animated-pages transitions='cross-fade'>
-    <app-route path="/" import="/pages/home-page.html"></app-route> 
-    <app-route path="/paste/:pasteid" import="/pages/paste-page.html"></app-route>
+    <app-route path="/" element="home-page"></app-route> 
+    <app-route path="/paste/:pasteid" element="paste-page"></app-route>
   </app-router>
 </body>
 
