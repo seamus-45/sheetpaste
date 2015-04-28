@@ -3,17 +3,24 @@
 <link rel="import" href="paste-bin.html">
 <link rel="import" href="paste-list.html">
 <link rel="import" href="mr-hankey.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <script src="../bower_components/qrjs/qr.js"></script>
 <script src="../bower_components/webcomponent-qr-code/src/qr-code.js"></script>
 
 <polymer-element name="paste-page" attributes="pasteid">
   <template>
-    <paste-service paste="{{paste}}" query="post/{{pasteid}}" error="{{error}}"></paste-service>
+    <style shim-shadowdom>
+      paper-spinner.yellow::shadow .circle {
+        border-color: #e65100;
+      }
+    </style>
+    <paste-service paste="{{paste}}" query="post/{{pasteid}}" error="{{error}}" loading={{loading}}></paste-service>
     <site-layout>
       <qr-code layout horizontal center-justified data="{{qrdata}}" modulesize="6"></qr-code>
-      <template if="{{!error}}" bind="{{paste}}">
+      <template if="{{!error && !loading}}" bind="{{paste}}">
         <paste-bin paste="{{content}}" timestamp="{{timestamp}}"></paste-bin>
       </template>
+      <div horizontal layout center-justified hidden?="{{!loading}}"><paper-spinner class="yellow" active?="{{loading}}"></paper-spinner></div>
       <mr-hankey hidden?="{{!error}}"></mr-hankey>
       <paste-list></paste-list>
     </site-layout>

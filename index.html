@@ -12,7 +12,6 @@
   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 
   <link rel="import" href="bower_components/app-router/app-router.html">
-  <link rel="import" href="bower_components/font-roboto/roboto.html">
   <link rel="import" href="pages/home-page.html">
   <link rel="import" href="pages/paste-page.html">
   
@@ -21,14 +20,14 @@
       height: 100%;
       margin: 0;
       background-color: #E5E5E5;
-      font-family: 'RobotoDraft', sans-serif;
+      font-family: sans-serif;
     }
   </style>
   
 </head>
 
 <body unresolved>
-  <app-router core-animated-pages transitions='cross-fade'>
+  <app-router>
     <app-route path="/paste/:pasteid" element="paste-page"></app-route>
     <app-route path="*" element="home-page"></app-route>
   </app-router>

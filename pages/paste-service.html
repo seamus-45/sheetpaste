@@ -1,13 +1,20 @@
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
-<polymer-element name="paste-service" attributes="lastid pastes paste query error noauto">
+<polymer-element name="paste-service" attributes="lastid pastes paste query error noauto loading">
   <template>
     <style>
       :host {
         display: none;
       }
     </style>
-    <core-ajax id="ajax" auto="{{!noauto}}" url="/api/{{query}}" response="{{response}}" handleAs="json"></core-ajax>
+    <core-ajax 
+      id="ajax" 
+      auto="{{!noauto}}" 
+      url="/api/{{query}}" 
+      on-core-response="{{handleResponse}}" 
+      handleAs="json"
+      loading="{{loading}}"
+      ></core-ajax>
   </template>
   <script>
     Polymer({
@@ -16,21 +23,22 @@
         this.paste = '';
         this.lastid = '';
         this.error = false;
+        this.loading = true;
         if (!this.query) {
           this.query = 'posts/' + Math.floor((new Date()).getTime() / 1000);
         }
       },
-      responseChanged: function(oldValue) {
-        if (this.response && !this.response.error) {
-          if (typeof this.response.length !== 'undefined') {
-            if (this.response.length != 10) { this.error = true };
-            this.lastid = this.response[this.response.length - 1].timestamp;
-            this.pastes = this.pastes.concat(this.response);
+      handleResponse: function(event, ajax) {
+        if (ajax.response && !ajax.response.error) {
+          if (typeof ajax.response.length !== 'undefined') {
+            if (ajax.response.length != 3) { this.error = true };
+            this.lastid = ajax.response[ajax.response.length - 1].timestamp;
+            this.pastes = this.pastes.concat(ajax.response);
           } else {
-            if (typeof this.response.url !== 'undefined') {
-              document.location.href = this.response.url;
+            if (typeof ajax.response.url !== 'undefined') {
+              document.location.href = ajax.response.url;
             } else {
-              this.paste = this.response;
+              this.paste = ajax.response;
             }
           }
         } else {
