@@ -37,7 +37,7 @@ EOF;
 function get_posts($until) {
   $db = new PbDB();
   $timestamp = time();
-  $sql = "SELECT id, content, timestamp FROM pastes WHERE timestamp<:until AND age>:timestamp ORDER BY timestamp DESC LIMIT 3";
+  $sql = "SELECT id, content, timestamp FROM pastes WHERE timestamp<:until AND age>:timestamp ORDER BY timestamp DESC LIMIT 10";
   $stmt = $db->prepare($sql);
   $stmt->bindParam('until', $until);
   $stmt->bindParam('timestamp', $timestamp);

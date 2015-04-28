@@ -31,7 +31,7 @@
       handleResponse: function(event, ajax) {
         if (ajax.response && !ajax.response.error) {
           if (typeof ajax.response.length !== 'undefined') {
-            if (ajax.response.length != 3) { this.error = true };
+            if (ajax.response.length != 10) { this.error = true };
             this.lastid = ajax.response[ajax.response.length - 1].timestamp;
             this.pastes = this.pastes.concat(ajax.response);
           } else {
