@@ -1,13 +1,9 @@
-<link rel="import" href="site-layout.html">
 <link rel="import" href="paste-service.html">
 <link rel="import" href="paste-bin.html">
-<link rel="import" href="paste-list.html">
 <link rel="import" href="mr-hankey.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-<script src="../bower_components/qrjs/qr.js"></script>
-<script src="../bower_components/webcomponent-qr-code/src/qr-code.js"></script>
 
-<polymer-element name="paste-page" attributes="pasteid">
+<polymer-element name="paste-page" attributes="pasteid" noscript>
   <template>
     <style shim-shadowdom>
       paper-spinner.yellow::shadow .circle {
@@ -15,21 +11,10 @@
       }
     </style>
     <paste-service paste="{{paste}}" query="post/{{pasteid}}" error="{{error}}" loading={{loading}}></paste-service>
-    <site-layout>
-      <qr-code layout horizontal center-justified data="{{qrdata}}" modulesize="6"></qr-code>
-      <template if="{{!error && !loading}}" bind="{{paste}}">
-        <paste-bin paste="{{content}}" timestamp="{{timestamp}}"></paste-bin>
-      </template>
-      <div horizontal layout center-justified hidden?="{{!loading}}"><paper-spinner class="yellow" active?="{{loading}}"></paper-spinner></div>
-      <mr-hankey hidden?="{{!error}}"></mr-hankey>
-      <paste-list></paste-list>
-    </site-layout>
+    <template if="{{!error && !loading}}" bind="{{paste}}">
+      <paste-bin paste="{{content}}" timestamp="{{timestamp}}"></paste-bin>
+    </template>
+    <div horizontal layout center-justified hidden?="{{!loading}}"><paper-spinner class="yellow" active?="{{loading}}"></paper-spinner></div>
+    <mr-hankey hidden?="{{!error}}"></mr-hankey>
   </template>
-  <script>
-    Polymer ({
-      created: function() {
-        this.qrdata = window.location.href;
-      },
-    });
-  </script>
 </polymer-element>

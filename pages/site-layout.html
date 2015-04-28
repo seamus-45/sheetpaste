@@ -3,7 +3,16 @@
 <link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 
-<polymer-element name="site-layout" noscript>
+<link rel="import" href="../bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../bower_components/app-router/app-router.html">
+<link rel="import" href="home-page.html">
+<link rel="import" href="paste-page.html">
+<link rel="import" href="paste-list.html">
+
+<script src="../bower_components/qrjs/qr.js"></script>
+<script src="../bower_components/webcomponent-qr-code/src/qr-code.js"></script>
+
+<polymer-element name="site-layout">
   <template>
     <style>
       a {
@@ -13,6 +22,9 @@
       .container {
         width: 95%;
         margin: 30px auto;
+      }
+      app-router {
+        width: 100%;
       }
       #navHeader {
         color: white;
@@ -31,21 +43,41 @@
       }
     </style>
     <core-scaffold rightDrawer drawerWidth='400px'>
-      <core-header-panel navigation flex mode="seamed" drawer>
+      <core-header-panel navigation flex mode="waterfall" drawer>
           <core-toolbar id="navHeader">
             <core-icon icon="history"></core-icon><span flex>История</span>
           </core-toolbar>
-          <content select="qr-code"></content>
-          <content select="paste-list"></content>
+          <qr-code hidden?="{{!showqr}}" data="{{qrdata}}" modulesize="6" layout horizontal center-justified></qr-code>
+          <paste-list></paste-list>
       </core-header-panel>
 
       <div tool layout horizontal flex center>
-        <span><a href='/'>SheetPaste!<core-icon icon="thumb-up"></core-icon></a></span>
+        <span><a href='/#/'>SheetPaste!<core-icon icon="thumb-up"></core-icon></a></span>
       </div>
 
       <div class="container" layout vertical center>
-        <content></content>
+        <app-router mode="hash" on-state-change="{{stateChange}}">
+          <app-route path="/paste/:pasteid" element="paste-page"></app-route>
+          <app-route path="/" element="home-page"></app-route>
+          <app-route path="*" redirect="/"></app-route>
+        </app-router>
       </div>
     </core-scaffold>
   </template>
+  <script>
+    Polymer ({
+      created: function() {
+        this.qrdata = '';
+        this.showqr = false;
+      },
+      stateChange: function(event) {
+        if (event.detail.path == '/') {
+          this.showqr = false;
+        } else {
+          this.qrdata = window.location.href;
+          this.showqr = true;
+        }
+      }
+    });
+  </script>
 </polymer-element>

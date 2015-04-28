@@ -10,10 +10,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
-
-  <link rel="import" href="bower_components/app-router/app-router.html">
-  <link rel="import" href="pages/home-page.html">
-  <link rel="import" href="pages/paste-page.html">
+  <link rel="import" href="pages/site-layout.html">
   
   <style>
     html,body {
@@ -27,10 +24,7 @@
 </head>
 
 <body unresolved>
-  <app-router>
-    <app-route path="/paste/:pasteid" element="paste-page"></app-route>
-    <app-route path="*" element="home-page"></app-route>
-  </app-router>
+  <site-layout></site-layout>
 </body>
 
 </html>

@@ -4,9 +4,7 @@
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
-<link rel="import" href="site-layout.html">
 <link rel="import" href="paste-service.html">
-<link rel="import" href="paste-list.html">
 
 <polymer-element name="home-page">
   <template>
@@ -50,29 +48,26 @@
     }
     </style>
     <paste-service id="service" error="{{error}}" noauto="true"></paste-service>
-    <site-layout>
-      <paper-shadow z="1">
-        <div layout vertical>
-          <paper-input-decorator id="decorator" label="CTRL-V" floatingLabel error="Пустая портянка">
-            <paper-autogrow-textarea rows="10">
-              <textarea id='paste' required></textarea>
-            </paper-autogrow-textarea>
-          </paper-input-decorator>
-          <div class='tool' layout horizontal>
-            <paper-radio-group id="age" valueattr="age" selected="+3 months" flex>
-              <paper-radio-button age="+1 day" label="1 день"></paper-radio-button>
-              <paper-radio-button age="+1 week" label="1 неделя"></paper-radio-button>
-              <paper-radio-button age="+1 month" label="1 мес."></paper-radio-button>
-              <paper-radio-button age="+3 months" label="3 мес."></paper-radio-button>
-              <paper-radio-button age="+6 months" label="6 мес."></paper-radio-button>
-              <paper-radio-button age="+1 year" label="1 год"></paper-radio-button>
-            </paper-radio-group>
-            <paper-fab icon='add' mini on-tap="{{addPaste}}"></paper-fab>
-          </div>
+    <paper-shadow z="1">
+      <div layout vertical>
+        <paper-input-decorator id="decorator" label="CTRL-V" floatingLabel error="Пустая портянка">
+          <paper-autogrow-textarea rows="10">
+            <textarea id='paste' required></textarea>
+          </paper-autogrow-textarea>
+        </paper-input-decorator>
+        <div class='tool' layout horizontal>
+          <paper-radio-group id="age" valueattr="age" selected="+3 months" flex>
+            <paper-radio-button age="+1 day" label="1 день"></paper-radio-button>
+            <paper-radio-button age="+1 week" label="1 неделя"></paper-radio-button>
+            <paper-radio-button age="+1 month" label="1 мес."></paper-radio-button>
+            <paper-radio-button age="+3 months" label="3 мес."></paper-radio-button>
+            <paper-radio-button age="+6 months" label="6 мес."></paper-radio-button>
+            <paper-radio-button age="+1 year" label="1 год"></paper-radio-button>
+          </paper-radio-group>
+          <paper-fab icon='add' mini on-tap="{{addPaste}}"></paper-fab>
         </div>
-      </paper-shadow>
-      <paste-list></paste-list>
-    </site-layout>
+      </div>
+    </paper-shadow>
   </template>
   <script>
     Polymer ({
