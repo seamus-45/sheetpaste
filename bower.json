@@ -26,7 +26,6 @@
     "core-ajax": "Polymer/core-ajax#~0.5.5",
     "date.format": "jacwright/date.format",
     "app-router": "~2.6.0",
-    "core-animated-pages": "Polymer/core-animated-pages#~0.5.5",
     "paper-fab": "Polymer/paper-fab#~0.5.5",
     "webcomponent-qr-code": "~0.1.7",
     "paper-shadow": "Polymer/paper-shadow#~0.5.5",
