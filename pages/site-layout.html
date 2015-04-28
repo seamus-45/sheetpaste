@@ -9,10 +9,7 @@
 <link rel="import" href="paste-page.html">
 <link rel="import" href="paste-list.html">
 
-<script src="../bower_components/qrjs/qr.js"></script>
-<script src="../bower_components/webcomponent-qr-code/src/qr-code.js"></script>
-
-<polymer-element name="site-layout">
+<polymer-element name="site-layout" noscript>
   <template>
     <style>
       a {
@@ -47,7 +44,6 @@
           <core-toolbar id="navHeader">
             <core-icon icon="history"></core-icon><span flex>История</span>
           </core-toolbar>
-          <qr-code hidden?="{{!showqr}}" data="{{qrdata}}" modulesize="6" layout horizontal center-justified></qr-code>
           <paste-list></paste-list>
       </core-header-panel>
 
@@ -56,7 +52,7 @@
       </div>
 
       <div class="container" layout vertical center>
-        <app-router mode="hash" on-state-change="{{stateChange}}">
+        <app-router mode="hash">
           <app-route path="/paste/:pasteid" element="paste-page"></app-route>
           <app-route path="/" element="home-page"></app-route>
           <app-route path="*" redirect="/"></app-route>
@@ -64,20 +60,4 @@
       </div>
     </core-scaffold>
   </template>
-  <script>
-    Polymer ({
-      created: function() {
-        this.qrdata = '';
-        this.showqr = false;
-      },
-      stateChange: function(event) {
-        if (event.detail.path == '/') {
-          this.showqr = false;
-        } else {
-          this.qrdata = window.location.href;
-          this.showqr = true;
-        }
-      }
-    });
-  </script>
 </polymer-element>

@@ -1,8 +1,12 @@
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="paste-core.html">
+
+<script src="../bower_components/qrjs/qr.js"></script>
+<script src="../bower_components/webcomponent-qr-code/src/qr-code.js"></script>
 <script src="../bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
 
 <polymer-element name="paste-bin" extends="paste-core">
@@ -19,18 +23,28 @@
         background-color: #e65100;
         margin: 0 0.5rem;
       }
+      .smallqr:hover {
+        cursor: pointer;
+      }
     </style>
       <paper-shadow z="1">
         <div class="paste-header" layout horizontal center>
           <h4 flex>Создано: {{timestamp | formatDate}}</h4>
+          <qr-code class='smallqr' data="{{qrdata}}" modulesize="1" center-justified layout horizontal on-tap="{{showQR}}"></qr-code>
           <paper-fab id='cb' data-clipboard-text="{{paste}}" icon='content-copy' mini></paper-fab>
         </div>
         <shadow></shadow>
       </paper-shadow>
       <paper-toast id="toast" text='Скопировано в буфер обмена'></paper-toast>
+      <paper-dialog id="QR" backdrop layered="false">
+        <qr-code data="{{qrdata}}" modulesize="6" center-justified layout horizontal on-tap="{{showQR}}"></qr-code>
+      </paper-dialog>
   </template>
   <script>
     Polymer({
+      created: function() {
+        this.qrdata = window.location.href;
+      },
       ready: function() {
         ZeroClipboard.config( { swfPath: "/bower_components/zeroclipboard/dist/ZeroClipboard.swf" } );
       },
@@ -47,6 +61,9 @@
             toast.show();
           } );
         } );
+      },
+      showQR: function() {
+        this.$.QR.open(); 
       }
     });
   </script>
