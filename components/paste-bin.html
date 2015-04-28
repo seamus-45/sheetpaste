@@ -30,14 +30,14 @@
       <paper-shadow z="1">
         <div class="paste-header" layout horizontal center>
           <h4 flex>Создано: {{timestamp | formatDate}}</h4>
-          <qr-code class='smallqr' data="{{qrdata}}" modulesize="1" center-justified layout horizontal on-tap="{{showQR}}"></qr-code>
-          <paper-fab id='cb' data-clipboard-text="{{paste}}" icon='content-copy' mini></paper-fab>
+          <qr-code class='smallqr' data="{{qrdata}}" modulesize="1" center-justified layout horizontal title="Показать QR-код" on-tap="{{showQR}}"></qr-code>
+          <paper-fab id='cb' data-clipboard-text="{{paste}}" icon='content-copy' title="Копировать" mini></paper-fab>
         </div>
         <shadow></shadow>
       </paper-shadow>
       <paper-toast id="toast" text='Скопировано в буфер обмена'></paper-toast>
       <paper-dialog id="QR" backdrop layered="false">
-        <qr-code data="{{qrdata}}" modulesize="6" center-justified layout horizontal on-tap="{{showQR}}"></qr-code>
+        <qr-code data="{{qrdata}}" modulesize="6"></qr-code>
       </paper-dialog>
   </template>
   <script>
