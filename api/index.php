@@ -37,7 +37,7 @@ EOF;
 function get_posts($until) {
   $db = new PbDB();
   $timestamp = time();
-  $sql = "SELECT id, content, timestamp FROM pastes WHERE timestamp<:until AND age>:timestamp ORDER BY timestamp DESC LIMIT 10";
+  $sql = "SELECT id, content, timestamp FROM pastes WHERE timestamp<:until AND age>:timestamp ORDER BY timestamp DESC LIMIT 3";
   $stmt = $db->prepare($sql);
   $stmt->bindParam('until', $until);
   $stmt->bindParam('timestamp', $timestamp);
@@ -142,64 +142,7 @@ function get_expired() {
 
 function api_hint() {
   ob_start();
-?>
-<section>
-<h3>Примеры запросов:</h3>
-<ul>
-<li><strong>GET</strong> /api/post/{id} - получить содержимое 1 поста.</li>
-<h5>JSON output (object)</h5>
-<pre>{ id: pasteid,
-  content: paste data,
-  timestamp: paste date }</pre>
-или
-<pre>  {error: "paste does not exists"}</pre>
-<li><strong>GET</strong> /api/posts/{timestamp} - получить первые 10 строк у записей начиная с {timestamp} (Unix time) в порядке устаревания.</li>
-<h5>JSON output (array)</h5>
-<pre>[
-{ id: pasteid,
-  content: first 10 lines of paste,
-  timestamp: paste date },
-{ ... },
-]</pre>
-или
-<pre>  {error: "paste does not exists"}</pre>
-<li><strong>POST</strong> /api/post - Отправить пасту.</li>
-<h5>JSON input</h5>
-<pre>{ content: paste data,
-  age: '+1 month'}</pre>
-<h5>JSON output</h5>
-<pre>{ url: http://example.com/paste/id }</pre>
-<h5>x-www-form-urlencoded input</h5>
-<pre>content: paste data,
-age: '+30 days'</pre>
-<h5>plain text output</h5>
-<pre>http://example.com/paste/id</pre>
-</ul>
-</section>
-<section>
-<h3>Примеры с CURL:</h3>
-<ul>
-<li>Добавить пасту в формате JSON</li>
-<pre>curl -i -X POST -H "Content-Type: application/json" -d '{"age":"+1 day","content":"test paste"}' http://example.com/api/post</pre>
-<li>Добавить пасту в формате urlencoded</li>
-<pre>curl -i -X POST --data-urlencode content@example.txt --data-urlencode age='+1 week' http://example.com/api/post</pre>
-<li>Пример скрипта (cat file | script.sh)</li>
-<pre>#!/bin/bash
-TEMP=$(mktemp)
-
-tee -a >${TEMP}
-
-if [ -s ${TEMP} ]; then
-  curl -s -i -X POST --data-urlencode content@${TEMP} --data-urlencode age='+3 month' http://localhost/api/post | tail -n1
-else
-  echo "Paste is empty!"
-  exit 1
-fi
-
-rm -f ${TEMP}</pre>
-</ul>
-</section>
-<?php
+  include 'api.html';
   $output = ob_get_clean();
   echo $output;
 }
