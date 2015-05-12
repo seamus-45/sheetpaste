@@ -1,7 +1,7 @@
 {
   "name": "sheetpaste",
   "version": "0.0.0",
-  "homepage": "https://github.com/seamus-45",
+  "homepage": "https://github.com/seamus-45/sheetpaste",
   "authors": [
     "Федотов Сергей <sr.fido@gmail.com>"
   ],
@@ -34,6 +34,7 @@
     "zeroclipboard": "~2.2.0",
     "paper-toast": "Polymer/paper-toast#~0.5.5",
     "paper-spinner": "Polymer/paper-spinner#~0.5.5",
-    "paper-dialog": "Polymer/paper-dialog#~0.5.5"
+    "paper-dialog": "Polymer/paper-dialog#~0.5.5",
+    "paper-dropdown-menu": "Polymer/paper-dropdown-menu#~0.5.5"
   }
 }

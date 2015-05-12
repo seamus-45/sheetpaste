@@ -29,6 +29,7 @@
   <script>
     Polymer({
       attached: function() {
+        this.orig = this.$.content.textContent;
         hljs.highlightBlock(this.$.content);
       },
       formatDate: function(value) {
