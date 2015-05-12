@@ -30,8 +30,8 @@
     </style>
       <paper-shadow z="1">
         <div class="paste-header" layout horizontal center>
-          <h4>Создано: {{timestamp | formatDate}}</h4>
-          <select-syntax id="selector" selected="{{selected}}" languages="{{languages}}" on-change-syntax="{{highlightBlock}}" flex center-justified horizontal layout></select-syntax>
+          <h4 flex>Создано: {{timestamp | formatDate}}</h4>
+          <select-syntax id="selector" selected="{{selected}}" languages="{{languages}}" on-change-syntax="{{highlightBlock}}"></select-syntax>
           <qr-code class='smallqr' data="{{qrdata}}" modulesize="1" center-justified layout horizontal title="Показать QR-код" on-tap="{{showQR}}"></qr-code>
           <paper-fab id='cb' data-clipboard-text="{{paste}}" icon='content-copy' title="Копировать" mini></paper-fab>
         </div>
