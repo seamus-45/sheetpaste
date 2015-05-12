@@ -51,6 +51,7 @@
         this.selected = '';
       },
       attached: function() {
+        this.orig = this.$.content.textContent;
         this.super();
         var s = this.$.content.getAttribute('class');
         var r = s.split(" ");
