@@ -7,16 +7,12 @@
 <polymer-element name="paste-list">
   <template>
     <style>
-      :host div {
+      :host > div[layout] {
         padding: 10px;
         display: block;
       }
       paper-fab {
         background-color: #e65100;
-      }
-      paper-fab[disabled] {
-        color: #424242;
-        background-color: #d4d4d4;
       }
     </style>
     <style shim-shadowdom>

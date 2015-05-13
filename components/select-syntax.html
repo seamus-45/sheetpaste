@@ -11,18 +11,21 @@
       content: '#';
     }
     paper-dropdown-menu {
-      margin: 0 1rem;
-      padding: 0;
+      margin: 0px 1rem;
+      padding: 0px;
       border: none;
       font-size: 1.2rem;
       font-style: italic;
       font-weight: bold;
       color: #e65100;
     }
+    paper-dropdown-menu::shadow #label {
+      padding-right: 0.25rem;
+    }
     paper-item {
-      font-size: 0.6rem;
       font-style: normal;
       font-weight: normal;
+      font-size: 1rem;
       color: black;
     }
     paper-item::shadow #ripple {
@@ -33,7 +36,7 @@
       color: white;
     }
     core-menu {
-      margin: 0;
+      margin: 0px;
     }
   </style>
     <paper-dropdown-menu label="Код" openedIcon='' closedIcon=''>

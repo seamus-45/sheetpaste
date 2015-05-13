@@ -13,18 +13,20 @@
   <link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
   <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
   <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+  <link rel="import" href="bower_components/font-roboto/roboto.html">
 
   <link rel="import" href="bower_components/app-router/app-router.html">
   <link rel="import" href="components/paste-add.html">
   <link rel="import" href="components/paste-view.html">
   <link rel="import" href="components/paste-list.html">
   
-  <style>
+  <style shim-shadowdom>
     html,body {
       height: 100%;
-      margin: 0;
-      background-color: #E5E5E5;
+      margin: 0px;
+      background-color: #d4d4d4;
       font-family: sans-serif;
+      font-size: 14px;
     }
     a {
       text-decoration: none;
@@ -41,12 +43,15 @@
       color: white;
       background-color: #E65100;
     }
-    [drawer] {
-      box-shadow: -1px 0 1px rgba(0, 0, 0, 0.1);
+    core-scaffold [drawer] {
+      box-shadow: -1px 0px 1px rgba(0, 0, 0, 0.1);
     }
-    core-scaffold /deep/ #headerPanel > core-toolbar {
+    core-scaffold::shadow core-toolbar {
       background-color: #424242;
     }
+    core-scaffold::shadow #headerPanel {
+      background-color: #ddd;
+    }  
     [tool] span {
       font-style: italic;
       font-size: 1.5rem;

@@ -12,15 +12,12 @@
     paper-fab {
       background-color: #e65100;
     }
-    paper-shadow {
-      width: 100%;
-      background-color: white;
-    }
-    paper-shadow > div {
-      margin: 0 1rem;
+    paper-shadow > div[layout] {
+      padding: 0px 1rem;
+      background-color: #fff;
     }
     paper-input-decorator {
-      padding-bottom: 0;
+      padding-bottom: 0px;
     }
     paper-radio-button::shadow #onRadio {
       background-color: #e65100;
@@ -44,7 +41,7 @@
       color: #424242;
     }
     .tool {
-      margin: 0.5rem 0;
+      margin: 0.5rem 0px;
     }
     </style>
     <paste-service id="service" error="{{error}}" noauto="true"></paste-service>
@@ -64,7 +61,7 @@
             <paper-radio-button age="+6 months" label="6 мес."></paper-radio-button>
             <paper-radio-button age="+1 year" label="1 год"></paper-radio-button>
           </paper-radio-group>
-          <paper-fab icon='add' mini on-tap="{{addPaste}}"></paper-fab>
+          <paper-fab on-tap="{{addPaste}}" icon="add" title="Добавить" mini></paper-fab>
         </div>
       </div>
     </paper-shadow>

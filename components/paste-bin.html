@@ -16,13 +16,18 @@
       h4 {
         margin: 1rem;
         color: #424242;
+        font-size: 1.2rem;
       }
       .paste-header {
         padding: 0.5rem;
       }
       paper-fab {
         background-color: #e65100;
-        margin: 0 0.5rem;
+        margin: 0px 0.5rem;
+      }
+      paper-fab.flash-error {
+        color: #424242;
+        background-color: #d4d4d4;
       }
       .smallqr:hover {
         cursor: pointer;
@@ -45,30 +50,44 @@
   <script>
     Polymer({
       ready: function() {
-        ZeroClipboard.config( { swfPath: "/bower_components/zeroclipboard/dist/ZeroClipboard.swf" } );
+        ZeroClipboard.config( { 
+          swfPath: "/bower_components/zeroclipboard/dist/ZeroClipboard.swf",
+        } );
         this.qrdata = window.location.href;
         this.languages = hljs.listLanguages();
         this.selected = '';
       },
       attached: function() {
-        this.orig = this.$.content.textContent;
         this.super();
-        var s = this.$.content.getAttribute('class');
-        var r = s.split(" ");
-        if ( r.shift() == 'hljs' ) {
-          this.selected = r.shift();
+        var str = this.$.content.getAttribute('class');
+        var items = str.split(" ");
+        if ( items.shift() == 'hljs' ) {
+          this.selected = items.shift();
         }
       },
       domReady: function() {
         var button = this.$.cb;
         var toast = this.$.toast;
         var client = new ZeroClipboard( button );
-        client.on( "ready", function( readyEvent ) {
+        client.on( "ready", function(e) {
           // alert( "ZeroClipboard SWF is ready!" );
-          client.on( "aftercopy", function( event ) {
+          client.on( "aftercopy", function(e) {
             // `this` === `client`
             // `event.target` === the element that was clicked
+            // quick bug fix with polymer button.
             button.focused = false;
+            button.pressed = false;
+            toast.show();
+          } );
+        } );
+        client.on( "error", function(e) {
+          button.setAttribute('class', 'flash-error');
+          button.title = e.message;
+          toast.text = e.message;
+          button.addEventListener('tap', function(e) {
+            // quick bug fix with polymer button.
+            button.focused = false;
+            button.pressed = false;
             toast.show();
           } );
         } );
@@ -79,7 +98,7 @@
       highlightBlock: function(event, detail, sender) {
         var content = this.$.content;
         content.setAttribute('class', 'hljs ' + this.selected);
-        content.textContent = this.orig;
+        content.textContent = this.paste;
         hljs.highlightBlock(content);
       }
     });
