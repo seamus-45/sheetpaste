@@ -87,6 +87,18 @@
       </app-router>
     </div>
   </core-scaffold>
+  <script>
+    window.addEventListener('WebComponentsReady', function() {
+      var router = document.querySelector('app-router');
+      var scaffold = document.querySelector('core-scaffold');
+
+      router.addEventListener('state-change', function(event) {
+        scaffold.closeDrawer();  
+      });
+
+      router.init();
+    });
+  </script>
 </body>
 
 </html>
