@@ -80,8 +80,8 @@ function add_post() {
   $paste = (object) NULL;
   $timestamp = time();
   $request = \Slim\Slim::getInstance()->request();
-  $contype = $request->headers['Content-Type'];
-  if($contype == 'application/json') {
+  $json = (preg_match("/^application\/json.*/", $request->headers['Content-Type']) ? true : false);
+  if($json) {
     $paste = json_decode($request->getBody());
   } else {
     try {
@@ -119,7 +119,7 @@ function add_post() {
     } else {
       $url .= $db->lastInsertRowId();
     }
-    if($contype == 'application/json') {
+    if($json) {
       echo json_encode(array("url" => $url)); 
     } else {
       echo $url;

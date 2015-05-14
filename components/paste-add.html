@@ -69,13 +69,14 @@
   <script>
     Polymer ({
       addPaste: function() {
+        var service = this.$.service;
         var decorator = this.$.decorator;
         var paste = this.$.paste;
         var age = this.$.age;
         decorator.isInvalid = !paste.validity.valid;
         decorator.autoValidate = true;
         if (paste.validity.valid) {
-          this.$.service.addPaste(age.selected, paste.value);
+          service.postPaste(age.selected, paste.value);
         }
       }
     });

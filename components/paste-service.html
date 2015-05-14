@@ -42,10 +42,11 @@
             }
           }
         } else {
+          ajax.response.error && console.log(ajax.response.error);
           this.error = true;
         }
       },
-      addPaste: function(age, content) {
+      postPaste: function(age, content) {
         this.query = 'post';
         var ajax = this.$.ajax;
         ajax.method = 'POST';
