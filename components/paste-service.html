@@ -1,3 +1,4 @@
+<script src="../bower_components/fartnow.js/fartnow.js"></script>
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
 <polymer-element name="paste-service" attributes="lastid pastes paste query error noauto loading">
@@ -42,6 +43,7 @@
             }
           }
         } else {
+          fartnow();
           ajax.response.error && console.log(ajax.response.error);
           this.error = true;
         }
