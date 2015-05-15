@@ -68,6 +68,7 @@
       domReady: function() {
         var button = this.$.cb;
         var toast = this.$.toast;
+        var paste = this.paste;
         var client = new ZeroClipboard( button );
         client.on( "ready", function(e) {
           // alert( "ZeroClipboard SWF is ready!" );
@@ -81,14 +82,17 @@
           } );
         } );
         client.on( "error", function(e) {
+          /*
           button.setAttribute('class', 'flash-error');
           button.title = e.message;
           toast.text = e.message;
+          */
           button.addEventListener('tap', function(e) {
+            window.prompt("Копировать в буфер: Ctrl+C, Enter", paste);
             // quick bug fix with polymer button.
             button.focused = false;
             button.pressed = false;
-            toast.show();
+            //toast.show();
           } );
         } );
       },
