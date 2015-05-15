@@ -35,6 +35,7 @@
     "paper-toast": "Polymer/paper-toast#~0.5.5",
     "paper-spinner": "Polymer/paper-spinner#~0.5.5",
     "paper-dialog": "Polymer/paper-dialog#~0.5.5",
-    "paper-dropdown-menu": "Polymer/paper-dropdown-menu#~0.5.5"
+    "paper-dropdown-menu": "Polymer/paper-dropdown-menu#~0.5.5",
+    "core-media-query": "Polymer/core-media-query#~0.5.6"
   }
 }

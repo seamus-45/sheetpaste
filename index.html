@@ -10,6 +10,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+  <link rel="import" href="bower_components/core-media-query/core-media-query.html">
   <link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
   <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
   <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
@@ -20,7 +21,7 @@
   <link rel="import" href="components/paste-view.html">
   <link rel="import" href="components/paste-list.html">
   
-  <style shim-shadowdom>
+  <style>
     html,body {
       height: 100%;
       margin: 0px;
@@ -28,77 +29,85 @@
       font-family: sans-serif;
       font-size: 14px;
     }
-    a {
-      text-decoration: none;
-      color: white;
-    }
-    .container {
-      width: 95%;
-      margin: 30px auto;
-    }
-    app-router {
-      width: 100%;
-    }
-    #navHeader {
-      color: white;
-      background-color: #E65100;
-    }
-    core-scaffold [drawer] {
-      box-shadow: -1px 0px 1px rgba(0, 0, 0, 0.1);
-    }
-    core-scaffold::shadow core-toolbar {
-      background-color: #424242;
-    }
-    core-scaffold::shadow #headerPanel {
-      background-color: #ddd;
-    }  
-    [tool] span {
-      font-style: italic;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .beta {
-      font-weight: normal; 
-      color: #aaaaaa; 
-      margin-left: 5px;'
-    }
   </style>
-  
 </head>
 
 <body unresolved>
-  <core-scaffold rightDrawer drawerWidth='400px' responsiveWidth='800px'>
-    <core-header-panel navigation flex mode="waterfall" drawer>
-        <core-toolbar id="navHeader">
-          <core-icon icon="history"></core-icon><span flex>История</span>
-        </core-toolbar>
-        <paste-list></paste-list>
-    </core-header-panel>
+  <polymer-element name="main-element">
+    <template>
+      <style shim-shadowdom>
+        a {
+          text-decoration: none;
+          color: white;
+        }
+        .container {
+          width: 95%;
+          margin: 30px auto;
+        }
+        app-router {
+          width: 100%;
+        }
+        #navHeader {
+          color: white;
+          background-color: #E65100;
+        }
+        core-scaffold [drawer] {
+          box-shadow: -1px 0px 1px rgba(0, 0, 0, 0.1);
+        }
+        core-scaffold::shadow core-toolbar {
+          background-color: #424242;
+        }
+        core-scaffold::shadow #headerPanel {
+          background-color: #ddd;
+        }  
+        [tool] span {
+          font-style: italic;
+          font-size: 1.5rem;
+          font-weight: bold;
+        }
+        .beta {
+          font-weight: normal; 
+          color: #aaaaaa; 
+          margin-left: 5px;'
+        }
+      </style>
+      <core-media-query query="max-width: 400px" queryMatches="{{phonescreen}}"></core-media-query>
+      <core-scaffold id="scaffold" rightDrawer drawerWidth='{{phonescreen ? "320px" : "400px"}}' responsiveWidth="1024px">
+        <core-header-panel navigation flex mode="waterfall" drawer>
+            <core-toolbar id="navHeader">
+              <core-icon icon="history"></core-icon><span flex>История</span>
+            </core-toolbar>
+            <paste-list></paste-list>
+        </core-header-panel>
 
-    <div tool layout horizontal flex center>
-      <a href='/#/'><span>SheetPaste!</span><span class='beta'>ℬeta</span></a>
-    </div>
+        <div tool layout horizontal flex center>
+          <a href='/#/'><span>SheetPaste!</span><span class='beta'>ℬeta</span></a>
+        </div>
 
-    <div class="container" layout vertical center>
-      <app-router mode="hash">
-        <app-route path="/paste/:pasteid" element="paste-view"></app-route>
-        <app-route path="/" element="paste-add"></app-route>
-        <app-route path="*" redirect="/"></app-route>
-      </app-router>
-    </div>
-  </core-scaffold>
-  <script>
-    window.addEventListener('WebComponentsReady', function() {
-      var router = document.querySelector('app-router');
-      var scaffold = document.querySelector('core-scaffold');
-
-      router.addEventListener('state-change', function(event) {
-        scaffold.closeDrawer();  
+        <div class="container" layout vertical center>
+          <app-router id="router" mode="hash">
+            <app-route path="/paste/:pasteid" element="paste-view"></app-route>
+            <app-route path="/" element="paste-add"></app-route>
+            <app-route path="*" redirect="/"></app-route>
+          </app-router>
+        </div>
+      </core-scaffold>
+    </template>
+    <script>
+      Polymer({
+        domReady: function(e) {
+          var router = this.$.router;
+          var scaffold = this.$.scaffold;
+          router.addEventListener('state-change', function(e) {
+            scaffold.closeDrawer();
+          });
+        },
       });
+    </script>
+  </polymer-element>
 
-      router.init();
-    });
-  </script>
+  <main-element></main-element>
+
 </body>
 
 </html>
