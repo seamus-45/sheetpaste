@@ -1,14 +1,24 @@
 <?php
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
+$config = [
+  'settings' => [
+    'displayErrorDetails' => false,
+  ],
+];
+
 require 'vendor/autoload.php';
 
 date_default_timezone_set('UTC');
 
-$app = new \Slim\Slim();
+$app = new \Slim\App($config);
 
 $app->get('/', 'api_hint');
-$app->get('/post/:id', 'get_post');
-$app->get('/posts/:until', 'get_posts');
+$app->get('/post/{id}', 'get_post');
+$app->get('/posts/{until}', 'get_posts');
 $app->post('/post', 'add_post');
+
 $app->run();
 
 class PbDB extends SQLite3 {
@@ -34,32 +44,9 @@ EOF;
   }
 }
 
-function get_posts($until) {
+function get_post(Request $request, Response $response, $args) {
   $db = new PbDB();
-  $timestamp = time();
-  $sql = "SELECT id, content, timestamp FROM pastes WHERE timestamp<:until AND age>:timestamp ORDER BY timestamp DESC LIMIT 10";
-  $stmt = $db->prepare($sql);
-  $stmt->bindParam('until', $until);
-  $stmt->bindParam('timestamp', $timestamp);
-  $result = $stmt->execute();
-  $rows = array();
-  $i = 0;
-  while($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    // cut after 10 lines
-    $row['content'] = preg_replace ('~((.*?\x0A){10}).*~s', '\\1...', $row['content']);
-    $rows[$i] = $row;
-    $i++;
-  }
-  $db->close();
-  if(count($rows)){
-    echo json_encode($rows);
-  } else {
-    echo '{"error": "Paste does not exists"}';
-  }
-}
-
-function get_post($id) {
-  $db = new PbDB();
+  $id = (int)$args['id'];
   $timestamp = time();
   $sql = "SELECT id, content, timestamp FROM pastes WHERE id=:id AND age>:timestamp";
   $stmt = $db->prepare($sql);
@@ -69,26 +56,41 @@ function get_post($id) {
   $row = $result->fetchArray(SQLITE3_ASSOC);
   $db->close();
   if($row) {
-    echo json_encode($row);
+    return $response->withJson($row);
   } else {
-    echo '{"error": "Paste does not exists"}';
+    return $response->withJson(array("error" => "Paste does not exists"));
   }
 }
 
-function add_post() {
+function get_posts(Request $request, Response $response, $args) {
   $db = new PbDB();
-  $paste = (object) NULL;
+  $until = (int)$args['until'];
   $timestamp = time();
-  $request = \Slim\Slim::getInstance()->request();
-  $json = (preg_match("/^application\/json.*/", $request->headers['Content-Type']) ? true : false);
-  if($json) {
-    $paste = json_decode($request->getBody());
-  } else {
-    try {
-      $paste->content = $request->params('content');
-      $paste->age = $request->params('age');
-    } finally { }
+  $sql = "SELECT id, content, timestamp FROM pastes WHERE timestamp<:until AND age>:timestamp ORDER BY timestamp DESC LIMIT 10";
+  $stmt = $db->prepare($sql);
+  $stmt->bindParam('until', $until);
+  $stmt->bindParam('timestamp', $timestamp);
+  $result = $stmt->execute();
+  $rows = array();
+  $i = 0;
+  while($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    // cut paste's body after 10 lines. it is just a preview.
+    $row['content'] = preg_replace ('~((.*?\x0A){10}).*~s', '\\1', $row['content']);
+    $rows[$i] = $row;
+    $i++;
   }
+  $db->close();
+  if(count($rows)){
+    return $response->withJson($rows);
+  } else {
+    return $response->withJson(array("error" => "Paste does not exists"));
+  }
+}
+
+function add_post(Request $request, Response $response, $args) {
+  $db = new PbDB();
+  $timestamp = time();
+  $paste = (object)$request->getParsedBody();
   if(!isset($paste->age)) {
     $paste->age = strtotime('+1 week');
   } else {
@@ -96,8 +98,7 @@ function add_post() {
   }
   if(!isset($paste->content)) {
     $db->close();
-    echo '{"error": "Empty paste. Content is not set!"}';
-    return;
+    return $response->withJson(array("error" => "Empty paste. Content is not set!"));
   }
   $expired = get_expired();
   if($expired) {
@@ -119,10 +120,10 @@ function add_post() {
     } else {
       $url .= $db->lastInsertRowId();
     }
-    if($json) {
-      echo json_encode(array("url" => $url)); 
+    if($request->getContentType() == 'application/json') {
+      return $response->withJson(array("url" => $url));
     } else {
-      echo $url;
+      return $response->getBody()->write($url);
     }
   }
   $db->close();
