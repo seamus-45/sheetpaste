@@ -87,7 +87,7 @@
       },
 
       _handleResponse: function(e, data) {
-        if ( data.response.url ) {
+        if ( typeof(data.response.url) !== undefined ) {
           document.location.href = data.response.url;
         }
       },
