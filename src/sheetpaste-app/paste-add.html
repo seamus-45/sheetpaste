@@ -1,0 +1,118 @@
+<link rel='import' href='../../bower_components/iron-flex-layout/iron-flex-layout-classes.html'>
+<link rel='import' href='../../bower_components/paper-material/paper-material.html'>
+<link rel='import' href='../../bower_components/paper-input/paper-textarea.html'>
+<link rel='import' href='../../bower_components/paper-radio-group/paper-radio-group.html'>
+<link rel='import' href='../../bower_components/paper-radio-button/paper-radio-button.html'>
+<link rel='import' href='../../bower_components/paper-fab/paper-fab.html'>
+<link rel='import' href='../../bower_components/iron-ajax/iron-ajax.html'>
+<link rel='import' href='imports/fartnow-import.html'>
+
+<dom-module id='paste-add'>
+  <template>
+    <style include='iron-flex'>
+      :host {
+        display: block;
+        background-color: white;
+      }
+      paper-textarea {
+        margin: 0 1rem;
+        --paper-input-container-color: #d4d4d4;
+        --paper-input-container-focus-color: #e65100;
+        --paper-input-container-invalid-color: #f00;
+      }
+      div.layout {
+        margin: 0 1rem;
+        padding-bottom: 0.5rem;
+      }
+      paper-fab {
+        --paper-fab-background: #e65100;
+        --paper-fab-keyboard-focus-background: #f40;
+      }
+      paper-radio-button {
+        --paper-radio-button-unchecked-color: #5a5a5a;
+        --paper-radio-button-unchecked-ink-color: #e65100;
+        --paper-radio-button-checked-color: #e65100;
+        --paper-radio-button-checked-ink-color: #e65100;
+      }
+    </style>
+    <paper-material elevation='1'>
+      <paper-textarea id='paste' placeholder='CTRL-V' rows='10' 
+        on-value-changed='_validate' required></paper-textarea>
+      <div class='layout horizontal'>
+        <paper-radio-group id='age' selected='+3 months' class='flex'>
+          <paper-radio-button name='+1 day'>1 день</paper-radio-button>
+          <paper-radio-button name='+1 week'>1 неделя</paper-radio-button>
+          <paper-radio-button name='+1 month'>1 мес.</paper-radio-button>
+          <paper-radio-button name='+3 months'>3 мес.</paper-radio-button>
+          <paper-radio-button name='+6 months'>6 мес.</paper-radio-button>
+          <paper-radio-button name='+1 year'>1 год.</paper-radio-button>
+        </paper-radio-group>
+        <paper-fab on-tap='_addPaste' icon='add' title='Добавить' mini></paper-fab>
+      </div>
+    </paper-material>
+
+    <iron-ajax id='ajax'
+      url='/api/post' method='POST' content-type='application/json'
+      last-error='{{error}}' on-response='_handleResponse'></iron-ajax>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'paste-add',
+
+      _validate: function() {
+        var paste = this.$.paste;
+        paste.errorMessage = this._rollMessage();
+        paste.validate();
+      },
+
+      _addPaste: function() {
+        var paste = this.$.paste;
+        var age = this.$.age;
+        var ajax = this.$.ajax;
+
+        this._validate();
+
+        if (!paste.invalid) {
+          ajax.body = JSON.stringify({
+            age: age.selected, 
+            content: paste.value,
+          });
+          ajax.generateRequest();
+        } else {
+          fartnow();
+        }
+      },
+
+      _handleResponse: function(e, data) {
+        if ( data.response.url ) {
+          document.location.href = data.response.url;
+        }
+      },
+
+      _rollMessage: function() {
+        var errors = [
+            'Никак не могу разобрать текст!',
+            'Я глухонемой, могу только читать!',
+            'Заставляй блять себя!',
+            'Не тяни блять время!',
+            'Оттачивай блять навыки!',
+            'Начни прямо сейчас блять!',
+            'Говори блять своими словами!',
+            'Выравнивай блять текст!',
+            'Не ссы бля, сделай как хочется!',
+            'Перестань блять делать ненужное!',
+            'Переноси блять сроки с запасом!',
+            'Не тормози бля!',
+            'Делай блять хронометраж!',
+            'Сделай блять пока помнишь!',
+            'Поменьше пизди о своих планах!',
+          ]
+        return errors[Math.floor(Math.random() * errors.length)]
+      },
+
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,109 @@
+<link rel='import' href='../../bower_components/iron-scroll-threshold/iron-scroll-threshold.html'>
+<link rel='import' href='../../bower_components/iron-flex-layout/iron-flex-layout-classes.html'>
+<link rel='import' href='../../bower_components/paper-spinner/paper-spinner-lite.html'>
+<link rel='import' href='../../bower_components/paper-material/paper-material.html'>
+<link rel='import' href='../../bower_components/iron-ajax/iron-ajax.html'>
+<link rel='import' href='imports/date-format-import.html'>
+<link rel='import' href='paste-core.html'>
+
+<dom-module id='paste-list'>
+  <template>
+    <style include='iron-flex'>
+      a {
+        text-decoration: none;
+        outline: none;
+      }
+      paper-material {
+        overflow: hidden;
+        margin: 10px;
+      }
+      .card-header h4 {
+        width: 100%;
+        margin: 0px;
+        padding: 2px;
+        background-color: #E65100;
+        color: white;
+        font-weight: 300;
+        font-size: 1rem;
+      }
+      paper-spinner-lite {
+        margin-top: 10px;
+        --paper-spinner-color: #e65100;
+      }
+    </style>
+
+    <template is='dom-repeat' items='[[pastes]]' as='paste'>
+      <a href='/#/paste/{{paste.id}}' draggable='false'>
+        <paper-material elevation='2'>
+          <paste-core paste='[[paste]]'></paste-core>
+          <div class='card-header'>
+            <h4>{{_formatDate(paste.timestamp)}}</h4>
+          </div>
+        </paper-material>
+      </a>
+    </template>
+
+    <div class='layout horizontal center-justified' hidden$='[[!loading]]'>
+      <paper-spinner-lite active$='[[loading]]'></paper-spinner-lite>
+    </div>
+
+    <iron-scroll-threshold id='pastesThreshold' scroll-target='[[scrollTarget]]'
+      lower-threshold='500' on-lower-threshold='_loadMoreData'>
+    </iron-scroll-threshold>
+
+    <iron-ajax id='ajax'
+      url='/api/posts/{{query}}' handle-as='json'
+      loading='{{loading}}' last-error='{{error}}'
+      on-response='_handleResponse' on-error='_handleErrorResponse'></iron-ajax>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'paste-list',
+
+      properties: {
+        query: {
+          type: String,
+          value: Math.floor((new Date()).getTime() / 1000),
+        },
+        loading: { 
+          type: Boolean, 
+          value: true 
+        },
+        pastes: {
+          type: Array,
+          value: [],
+        }
+      },
+
+      _handleResponse: function(e, data) {
+        var items = data.response;
+
+        items.forEach(function(paste) {
+          this.push('pastes', paste);
+        }.bind(this));
+
+        var lastid = this.pastes.length - 1;
+        this.query = this.pastes[lastid].timestamp;
+      },
+
+      _handleErrorResponse: function(e, data) {
+        console.log(this.error.response);
+      },
+
+      _formatDate: function(date) {
+        return new Date(date*1000).format('Y-m-d H:i:s');
+      },
+
+      _loadMoreData: function() {
+        if (!this.error) {
+          this.$.ajax.generateRequest();
+          this.$.pastesThreshold.clearTriggers();
+        }
+      },
+
+    });
+  </script>
+</dom-module>

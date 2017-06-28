@@ -1,0 +1,110 @@
+<link rel='import' href='../../bower_components/polymer/polymer.html'>
+<link rel='import' href='../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html'>
+<link rel='import' href='../../bower_components/paper-listbox/paper-listbox.html'>
+<link rel='import' href='../../bower_components/paper-item/paper-item.html'>
+<link rel='import' href='imports/highlightjs-import.html'>
+
+<dom-module id='select-syntax'>
+  <template>
+    <style>
+      :host {
+        --syntax-selector: {
+          font-size: 1.2rem;
+          font-style: italic;
+          font-weight: bold;
+          color: #e65100;
+          cursor: pointer;
+        }
+      }
+      paper-dropdown-menu {
+        --paper-input-container-input: {
+          max-width: 8rem;
+          margin-left: 0.1rem;
+          @apply --syntax-selector;
+        };
+        --paper-dropdown-menu-ripple: {
+          color: #e65100;
+        }
+        --paper-input-container-underline: {
+          display: none;
+        };
+        --paper-input-container-underline-focus: {
+          display: none;
+        };
+        --paper-input-container-underline-disabled: {
+          display: none;
+        };
+        --paper-dropdown-menu-icon: {
+          display: none;
+        }
+      }
+      paper-dropdown-menu ::content div.input-content:before {
+        content: '#';
+        @apply --syntax-selector;
+      }
+      paper-item {
+        --paper-item-min-height: 32px; 
+        --paper-item: {
+          color: #444;
+          cursor: pointer;
+        }
+        --paper-item-selected: {
+          color: #e65100;
+        };
+      }
+    </style>
+
+    <paper-dropdown-menu no-label-float>
+      <paper-listbox id='menu' class='dropdown-content' selected='{{listboxItem}}'>
+        <template id='list' is='dom-repeat' items='[[languages]]' as='lang'>
+          <paper-item>[[lang]]</paper-item>
+        </template> 
+      </paper-listbox>
+    </paper-dropdown-menu> 
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'select-syntax',
+
+      properties: {
+        languages: {
+          type: Array,
+          value: [],
+        },
+        listboxItem: {
+          type: Number,
+          observer: '_listboxItemChanged',
+        },
+        language: {
+          type: String,
+          observer: '_languageChanged',
+          notify: true,
+        }
+      },
+
+      ready: function() {
+        if ( ! this.languages.length ) {
+          hljs.listLanguages().forEach(function(lang) {
+            this.push('languages', lang);
+          }.bind(this));
+        }
+      },
+
+      _listboxItemChanged: function() {
+        if ( this.languages.indexOf(this.language)  != this.listboxItem ) {
+          this.language = this.languages[this.listboxItem];
+        }
+      },
+
+      _languageChanged: function() {
+        if ( ! this.listboxItem ) {
+          this.listboxItem = this.languages.indexOf(this.language);
+        }
+      },
+
+    });
+  </script>
+</polymer-element>

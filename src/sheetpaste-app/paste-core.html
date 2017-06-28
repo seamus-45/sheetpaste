@@ -1,0 +1,53 @@
+<link rel='import' href='imports/highlightjs-import.html'>
+<link rel='import' href='imports/railscasts-theme.html'>
+
+<dom-module id='paste-core'>
+  <template>
+    <style include='railscasts-theme'>
+      pre {
+        margin: 0;
+        padding: 0;
+      }
+      code.hljs {
+        font-size: 1.2rem;
+        line-height: 1.2;
+        overflow: hidden;
+        @apply --code-style;
+      }
+    </style>
+
+    <pre><code class$='hljs [[language]]'></code></pre>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paste-core',
+
+      properties: {
+        paste: {
+          type: Object,
+          observer: '_highlight',
+        },
+        language: {
+          type: String,
+          notify: true,
+        },
+      },
+
+      _highlight: function() {
+        if (! this.language) {
+          var auto = hljs.highlightAuto(this.paste.content);
+          this.language = auto.language;
+          this.addEventListener('language-changed', this._highlight);
+          // We should use Polymer DOM API here for proper style scoping.
+          Polymer.dom(this.$$('code')).innerHTML = auto.value;
+        } else {
+          // We should use Polymer DOM API here for proper style scoping.
+          Polymer.dom(this.$$('code')).innerHTML = hljs.highlight(this.language, this.paste.content).value;
+        };
+      },
+
+    });
+  </script>
+</dom-module>

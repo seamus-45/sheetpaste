@@ -58,7 +58,7 @@ function get_post(Request $request, Response $response, $args) {
   if($row) {
     return $response->withJson($row);
   } else {
-    return $response->withJson(array("error" => "Paste does not exists"));
+    return $response->withJson(array("error" => "Paste does not exists!!"), 404);
   }
 }
 
@@ -83,7 +83,7 @@ function get_posts(Request $request, Response $response, $args) {
   if(count($rows)){
     return $response->withJson($rows);
   } else {
-    return $response->withJson(array("error" => "Paste does not exists"));
+    return $response->withJson(array("error" => "No more pastes!"), 416);
   }
 }
 
@@ -98,7 +98,7 @@ function add_post(Request $request, Response $response, $args) {
   }
   if(!isset($paste->content)) {
     $db->close();
-    return $response->withJson(array("error" => "Empty paste. Content is not set!"));
+    return $response->withJson(array("error" => "Empty paste!"), 204);
   }
   $expired = get_expired();
   if($expired) {

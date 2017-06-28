@@ -1,0 +1,129 @@
+<link rel='import' href='../../bower_components/iron-flex-layout/iron-flex-layout-classes.html'>
+<link rel='import' href='../../bower_components/granite-clipboard/granite-clipboard.html'>
+<link rel='import' href='../../bower_components/paper-material/paper-material.html'>
+<link rel='import' href='../../bower_components/paper-spinner/paper-spinner-lite.html'>
+<link rel='import' href='../../bower_components/paper-toast/paper-toast.html'>
+<link rel='import' href='../../bower_components/paper-fab/paper-fab.html'>
+<link rel='import' href='../../bower_components/iron-ajax/iron-ajax.html'>
+<link rel='import' href='imports/date-format-import.html'>
+<link rel='import' href='select-syntax.html'>
+<link rel='import' href='paste-core.html'>
+<link rel='import' href='not-found.html'>
+<link rel='import' href='qr-code.html'>
+
+<dom-module id='paste-view'>
+  <template>
+    <style include='iron-flex'>
+      :host {
+        display: block;
+      }
+      #pasteHeader {
+        background-color: white;
+      }
+      paper-spinner-lite {
+        --paper-spinner-color: #e65100;
+      }
+      paper-fab {
+        margin: 0.5rem 1rem;
+        --paper-fab-background: #e65100;
+        --paper-fab-keyboard-focus-background: #f40;
+      }
+      h4 {
+        margin: 1rem; 
+        font-size: 1.2rem;
+        color: #444;
+      }
+      qr-code:hover {
+        cursor: pointer;
+      }
+      qr-code {
+        margin: 0.5rem;
+      }
+    </style>
+
+    <paper-material elevation='1' hidden$='[[_hidePaste(error, loading)]]'>
+      <div id='pasteHeader' class='layout horizontal center'>
+        <h4 class='flex'>{{_formatDate(paste.timestamp)}}</h4>
+        <select-syntax title='Изменить подсветку' language='{{language}}'></select-syntax>
+        <qr-code class='layout horizontal' modulesize='1' data='{{qrdata}}' title='Показать QR-код' on-tap='_showQR'></qr-code>
+        <granite-clipboard text='[[paste.content]]'>
+          <paper-fab icon='content-copy' title='Копировать' on-tap='_copyPaste' mini></paper-fab>
+        </granite-clipboard>
+      </div>
+      <paste-core paste='[[paste]]' language='{{language}}'></paste-core>
+    </paper-material>
+
+    <div class='layout horizontal center-justified' hidden$='[[!loading]]'>
+      <paper-spinner-lite active$='[[loading]]'></paper-spinner-lite>
+    </div>
+
+    <not-found hidden$='[[!error]]'></not-found>
+
+    <paper-toast id='toast' text='Скопировано в буфер обмена'></paper-toast>
+
+    <iron-ajax id='ajax' auto
+      url='/api/post/{{query}}' handle-as='json'
+      loading='{{loading}}' last-error='{{error}}'
+      on-response='_handleResponse' on-error='_handleErrorResponse'></iron-ajax>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'paste-view',
+
+      properties: {
+        error: { 
+          type: Boolean, 
+          value: false 
+        },
+        loading: { 
+          type: Boolean, 
+          value: true 
+        },
+      },
+
+      ready: function() {
+        this.qrdata = window.location.href;
+      },
+
+      attached: function() {
+        // send correct offset for scroll threshold
+        // call with async for slow browsers
+        this.async(function() {
+          this.fire('paste-attached', { pasteOffset: this.$.pasteHeader.clientHeight });
+        }.bind(this), 200);
+      },
+
+      _showQR: function() {
+        // Issue: https://github.com/PolymerElements/paper-dialog/issues/79#issuecomment-256454790
+        Polymer.dom(document).querySelector('sheetpaste-app').querySelector('#QR').open()
+      },
+
+      _formatDate: function(value) {
+        return new Date(value*1000).format('Y-m-d H:i:s');
+      },
+
+      _handleResponse: function(e, data) {
+        this.paste = data.response;
+      },
+
+      _handleErrorResponse: function(e) {
+        console.log(this.error.response);
+      },
+
+      _copyPaste: function() {
+        this.$.toast.open();
+      },
+
+      _hidePaste(error, loading) {
+        if ( error || loading ) {
+          return true
+        } else {
+          return false 
+        }
+      }
+    });
+  </script>
+</dom-module>

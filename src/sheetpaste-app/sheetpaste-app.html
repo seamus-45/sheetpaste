@@ -1,0 +1,223 @@
+<link rel='import' href='../../bower_components/polymer/polymer.html'>
+<link rel='import' href='../../bower_components/iron-flex-layout/iron-flex-layout-classes.html'>
+<link rel='import' href='../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html'>
+<link rel='import' href='../../bower_components/app-layout/app-header-layout/app-header-layout.html'>
+<link rel='import' href='../../bower_components/app-layout/app-drawer/app-drawer.html'>
+<link rel='import' href='../../bower_components/app-layout/app-header/app-header.html'>
+<link rel='import' href='../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html'>
+<link rel='import' href='../../bower_components/app-layout/app-toolbar/app-toolbar.html'>
+<link rel='import' href='../../bower_components/iron-icons/iron-icons.html'>
+<link rel='import' href='../../bower_components/iron-icon/iron-icon.html'>
+<link rel='import' href='../../bower_components/paper-icon-button/paper-icon-button.html'>
+<link rel='import' href='../../bower_components/app-router/app-router.html'>
+<link rel='import' href='../../bower_components/paper-dialog/paper-dialog.html'>
+<link rel='import' href='../../bower_components/granite-clipboard/granite-clipboard.html'>
+<link rel='import' href='../../bower_components/paper-fab/paper-fab.html'>
+<link rel='import' href='../../bower_components/paper-toast/paper-toast.html'>
+<link rel='import' href='paste-add.html'>
+<link rel='import' href='paste-view.html'>
+<link rel='import' href='paste-list.html'>
+<link rel='import' href='not-found.html'>
+<link rel='import' href='qr-code.html'>
+
+
+<dom-module id='sheetpaste-app'>
+  <template>
+    <style include='iron-flex'>
+      :host {
+        font-family: sans-serif;
+      }
+      app-drawer-layout {
+        background-color: #ddd;
+      }
+      app-drawer {
+        --app-drawer-width: 400px;
+        --app-drawer-content-container: {
+          transition-property: width, -webkit-transform;
+          transition-property: width, transform;
+          box-shadow: -1px 0 1px 0 rgba(0,0,0,0.2);
+        }
+        --app-drawer-scrim-background: rgba(0, 0, 0, 0.3);
+        text-align: left;
+      }
+      app-drawer[is-narrow] {
+        --app-drawer-width: 320px;
+      }
+      app-drawer span {
+        margin: 0 10px;
+        cursor: default;
+      }
+      app-toolbar {
+        color: white;
+        background-color: #424242;
+      }
+      app-toolbar span {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      app-drawer app-toolbar {
+        background-color: #e65100;
+      }
+      app-toolbar a {
+        pointer-events: auto;
+        text-decoration: none;
+        outline: none;
+        color: inherit;
+      }
+      app-toolbar a span {
+        font-style: italic;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+      app-toolbar a span.beta {
+        color: #aaa;
+        margin-left: 0.5rem;
+      }
+      div#main {
+        width: 95%;
+        margin: 2rem auto;
+      }
+      paper-dialog > * {
+        padding: 0;
+      }
+      paper-fab {
+        margin: 0.5rem 1rem;
+        --paper-fab-background: #e65100;
+        --paper-fab-keyboard-focus-background: #f40;
+      }
+      .smallqr:hover {
+        cursor: pointer;
+      }
+      .smallqr {
+        margin: 0.5rem;
+      }
+    </style>
+
+    <app-drawer-layout fullbleed responsive-width='1024px'>
+
+      <app-drawer id='drawer' align='right' is-narrow$='{{isNarrow}}'>
+
+      <app-header-layout has-scrolling-region>
+
+        <app-header id='sidebar' fixed effects='waterfall'>
+          <app-toolbar><iron-icon icon='pastes'></iron-icon><span>История</span></app-toolbar>
+        </app-header>
+
+        <paste-list scroll-target='[[sidebarScroll]]'></paste-list>
+
+      </app-header-layout>
+
+      </app-drawer>
+
+      <app-header-layout has-scrolling-region>
+
+        <app-header fixed effects='waterfall' threshold='[[pasteThreshold]]' threshold-triggered='{{isPasteScrolled}}'>
+          <app-toolbar>
+
+            <div main-title><a href='/#'><span>SheetPaste!</span><span class='beta'>ℬeta</span></a></div>
+
+            <qr-code hidden$='[[!_showActions(isPasteView,isPasteScrolled)]]' class='layout horizontal smallqr' 
+              modulesize='1' data='{{qrdata}}' title='Показать QR-код' on-tap='_showQR'></qr-code>
+
+            <granite-clipboard text='[[paste]]' hidden$='[[!_showActions(isPasteView,isPasteScrolled)]]'>
+              <paper-fab icon='content-copy' title='Копировать' on-tap='_copyPaste' mini></paper-fab>
+            </granite-clipboard>
+
+            <paper-icon-button icon='menu' drawer-toggle></paper-icon-button>
+
+          </app-toolbar>
+        </app-header>
+
+        <div id='main' class='layout center-justified'>
+          <app-router id='router' mode='hash' on-state-change='_stateChange'>
+            <app-route path='/paste/:query' element='paste-view' on-paste-attached='_setPasteThreshold'></app-route>
+            <app-route path='/' element='paste-add'></app-route>
+            <app-route path='*' element='not-found'></app-route>
+          </app-router>
+        </div>
+
+      </app-header-layout>
+
+    </app-drawer-layout>
+
+    <paper-dialog id='QR' with-backdrop>
+      <qr-code modulesize='6' data='{{qrdata}}'></qr-code>
+    </paper-dialog>
+
+    <paper-toast id='toast' text='Скопировано в буфер обмена'></paper-toast>
+
+    <iron-media-query query='(max-width: 400px)' query-matches='{{isNarrow}}'></iron-media-query>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'sheetpaste-app',
+
+      properties: {
+        paste: {
+          type: String,
+          value: '',
+        },
+        isNarrow: {
+          type: Boolean,
+          observer: '_isNarrowChanged',
+        },
+        pasteThreshold: {
+          type: Number,
+          value: 64,
+        },
+        isPasteScrolled: {
+          type: Boolean,
+          value: false,
+        },
+        prefLang: Object,
+      },
+
+      attached: function() {
+        // set correct scroll target for paste-list
+        // call with async for slow browsers
+        this.async(function() {
+          this.sidebarScroll = this.$.sidebar.scrollTarget;
+        }.bind(this), 200);
+      },
+
+      _setPasteThreshold: function(e) {
+        // set correct top threshold to show actions
+        var mainOffset = this.$.main.offsetTop;
+        var pasteOffset = e.detail.pasteOffset;
+        this.pasteThreshold =  mainOffset + pasteOffset;
+      },
+
+      _stateChange: function(e) {
+        var drawer = this.$.drawer;
+        this.qrdata = window.location.href;
+        this.isPasteView = ( e.detail.path.split('/')[1] === 'paste' ) ? true : false;
+        if ( drawer.opened && ! drawer.persistent ) {
+          drawer.close();
+        }
+      },
+      
+      _isNarrowChanged: function(param) {
+        this.updateStyles();
+      },
+
+      _copyPaste: function() {
+        this.paste = this.isPasteView ? this.$$('paste-view').paste.content : '';
+        this.$.toast.open();
+      },
+
+      _showActions: function() {
+        return ( this.isPasteView && this.isPasteScrolled ) ? true : false;
+      },
+
+      _showQR: function() {
+        this.$.QR.open();
+      },
+
+    });
+  </script>
+</dom-module>

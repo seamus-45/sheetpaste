@@ -1,4 +1,3 @@
-api/vendor
-api/pastebin.db
-test
-bower_components
+bower_components/
+build/
+node_modules/
