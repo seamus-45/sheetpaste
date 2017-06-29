@@ -40,8 +40,10 @@
         --app-drawer-scrim-background: rgba(0, 0, 0, 0.3);
         text-align: left;
       }
-      app-drawer[is-narrow] {
-        --app-drawer-width: 320px;
+      @media (max-width: 400px) {
+        app-drawer {
+          --app-drawer-width: 320px;
+        }
       }
       app-drawer span {
         margin: 0 10px;
@@ -97,7 +99,7 @@
 
     <app-drawer-layout fullbleed responsive-width='1024px'>
 
-      <app-drawer id='drawer' align='right' is-narrow$='{{isNarrow}}'>
+      <app-drawer id='drawer' align='right'>
 
       <app-header-layout has-scrolling-region>
 
@@ -131,7 +133,7 @@
         </app-header>
 
         <div id='main' class='layout center-justified'>
-          <app-router id='router' mode='hash' on-state-change='_stateChange'>
+          <app-router id='router' mode='hash' on-state-change='_stateChanged'>
             <app-route path='/paste/:query' element='paste-view' on-paste-attached='_setPasteThreshold'></app-route>
             <app-route path='/' element='paste-add'></app-route>
             <app-route path='*' element='not-found'></app-route>
@@ -162,10 +164,6 @@
           type: String,
           value: '',
         },
-        isNarrow: {
-          type: Boolean,
-          observer: '_isNarrowChanged',
-        },
         pasteThreshold: {
           type: Number,
           value: 64,
@@ -174,8 +172,11 @@
           type: Boolean,
           value: false,
         },
-        prefLang: Object,
       },
+
+      observers: [
+        '_isNarrowChanged(isNarrow)',
+      ],
 
       attached: function() {
         // set correct scroll target for paste-list
@@ -192,7 +193,7 @@
         this.pasteThreshold =  mainOffset + pasteOffset;
       },
 
-      _stateChange: function(e) {
+      _stateChanged: function(e) {
         var drawer = this.$.drawer;
         this.qrdata = window.location.href;
         this.isPasteView = ( e.detail.path.split('/')[1] === 'paste' ) ? true : false;
@@ -201,7 +202,7 @@
         }
       },
       
-      _isNarrowChanged: function(param) {
+      _isNarrowChanged: function() {
         this.updateStyles();
       },
 
